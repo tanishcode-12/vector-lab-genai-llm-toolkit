@@ -157,3 +157,6 @@ vanilla HTML/CSS/JS (no frontend build step required)
 ## License
 
 MIT — use freely, attribution appreciated.
+
+## Recent fixes
+- Fixed t-SNE plot to refresh on each new word query instead of staying static.
