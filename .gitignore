@@ -14,3 +14,4 @@ checkpoints/*.pt
 .DS_Store
 .vscode/
 .idea/
+# small update: added ignore rule
