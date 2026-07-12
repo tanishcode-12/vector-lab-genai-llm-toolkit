@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Embedding Explorer{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <p class="eyebrow">cbow · nn.embeddingbag</p>
+  <h1>Embedding <span class="accent">Explorer</span></h1>
+  <p class="page-lede">
+    Query the vector space learned by the CBOW model on first request &mdash;
+    training happens once, in the background, then results are cached for the session.
+    Nearest neighbours are ranked by cosine similarity.
+  </p>
+</section>
+
+<section class="panel">
+  <div class="panel-row">
+    <div class="query-box">
+      <label class="field-label" for="wordInput">Query word</label>
+      <div class="input-row">
+        <input id="wordInput" type="text" placeholder="e.g. small, team, mountain, sun" autocomplete="off">
+        <button id="queryBtn" class="btn btn-primary">Find neighbours</button>
+      </div>
+      <p id="status" class="status-line">Model not loaded yet &mdash; first query trains CBOW on the toy corpus (~15s).</p>
+      <div id="vocabHint" class="vocab-hint"></div>
+    </div>
+  </div>
+
+  <div class="results-grid">
+    <div class="neighbours-panel">
+      <p class="section-label">// nearest neighbours</p>
+      <ol id="neighboursList" class="neighbours-list"></ol>
+    </div>
+    <div class="plot-panel">
+      <p class="section-label">// t-sne projection</p>
+      <div id="plotWrap" class="plot-wrap">
+        <p class="plot-placeholder">Run a query to generate the projection.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/embeddings.js') }}"></script>
+{% endblock %}

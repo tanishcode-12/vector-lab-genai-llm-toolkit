@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Translator{% endblock %}
+
+{% block content %}
+<section class="page-head">
+  <p class="eyebrow">lstm encoder &ndash; decoder · greedy decoding</p>
+  <h1 id="pairTitle">German <span class="accent">&rarr;</span> English</h1>
+  <p class="page-lede">
+    A small Seq2Seq model trained on a toy parallel corpus.
+    Switch the language pair below to try German, French, Spanish, Italian, and English combinations.
+  </p>
+</section>
+
+<section class="panel">
+  <div class="translate-grid">
+    <div class="translate-input">
+      <label class="field-label" for="langSelect">Language pair</label>
+      <select id="langSelect" class="lang-select">
+        {% for pair in language_pairs %}
+        <option value="{{ pair.code }}" {% if pair.code == default_pair %}selected{% endif %}>{{ pair.label }}</option>
+        {% endfor %}
+      </select>
+
+      <label class="field-label" for="sourceInput" id="sourceLabel">German sentence</label>
+      <textarea id="sourceInput" rows="3" placeholder="e.g. der mann geht"></textarea>
+
+      <label class="field-label" for="refInput">Reference translation (optional, for BLEU)</label>
+      <input id="refInput" type="text" placeholder="e.g. the man is walking">
+
+      <button id="translateBtn" class="btn btn-primary">Translate</button>
+      <p id="translateStatus" class="status-line">Model not loaded yet &mdash; first request trains the Seq2Seq model (~30s).</p>
+
+      <div class="samples">
+        <p class="field-label">Sample sentences</p>
+        <div id="samplesList" class="samples-list"></div>
+      </div>
+    </div>
+
+    <div class="translate-output">
+      <p class="section-label">// output</p>
+      <div class="output-card">
+        <div class="output-row">
+          <span class="output-key">input</span>
+          <span id="outInput" class="output-val">&mdash;</span>
+        </div>
+        <div class="output-row">
+          <span class="output-key">translation</span>
+          <span id="outTranslation" class="output-val output-val--accent">&mdash;</span>
+        </div>
+        <div class="output-row">
+          <span class="output-key">bleu score</span>
+          <span id="outBleu" class="output-val">&mdash;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/translate.js') }}"></script>
+{% endblock %}

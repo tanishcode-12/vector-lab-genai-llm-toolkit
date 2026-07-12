@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+venv/
+.venv/
+env/
+.env
+
+# trained model weights (regenerate with run.py / app.py)
+checkpoints/*.pt
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

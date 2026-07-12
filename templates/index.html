@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Overview{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">architecture &amp; data preparation · pytorch</p>
+    <h1>Every token has<br>a place in <span class="accent">the space.</span></h1>
+    <p class="hero-lede">
+      A from-scratch build of the components underneath modern language models:
+      tokenizers, padded batches, CBOW &amp; Skip-gram embeddings, and an
+      LSTM encoder&ndash;decoder that translates German to English one token
+      at a time. Nothing here is a black box &mdash; open <code>/src</code> and
+      read exactly how each piece works.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="{{ url_for('embeddings_page') }}">Explore the vector space</a>
+      <a class="btn btn-ghost" href="{{ url_for('translate_page') }}">Try the translator</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <canvas id="vectorField" width="560" height="440" aria-hidden="true"></canvas>
+    <p class="hero-visual-caption">live projection · 24-dim embeddings reduced for display</p>
+  </div>
+</section>
+
+<section class="pipeline">
+  <p class="section-label">// pipeline</p>
+  <div class="pipeline-grid">
+    <article class="pipeline-card">
+      <span class="pipeline-index">tokenization.py</span>
+      <h3>Tokenize &amp; build vocab</h3>
+      <p>Lower-cased word tokenizer with a <code>Counter</code>-backed vocabulary. Special tokens
+      <code>&lt;pad&gt;</code>, <code>&lt;unk&gt;</code>, <code>&lt;bos&gt;</code>, <code>&lt;eos&gt;</code> reserve the first four indices.</p>
+    </article>
+    <article class="pipeline-card">
+      <span class="pipeline-index">data_loader.py</span>
+      <h3>Batch &amp; pad</h3>
+      <p>Context windows are flattened for <code>EmbeddingBag</code>; parallel sentences are padded
+      to equal length with <code>pad_sequence</code> for the translation task.</p>
+    </article>
+    <article class="pipeline-card">
+      <span class="pipeline-index">embeddings.py</span>
+      <h3>CBOW &amp; Skip-gram</h3>
+      <p>Two Word2Vec architectures trained side by side on the same toy corpus &mdash;
+      compare how each shapes the resulting vector space.</p>
+    </article>
+    <article class="pipeline-card">
+      <span class="pipeline-index">seq2seq_model.py</span>
+      <h3>Encoder &ndash; Decoder</h3>
+      <p>An LSTM encoder compresses a source sentence into a hidden state; the decoder unrolls
+      it back out token by token, with teacher forcing during training.</p>
+    </article>
+  </div>
+</section>
+
+<section class="specs">
+  <p class="section-label">// architecture notes</p>
+  <div class="specs-grid">
+    <div class="specs-row">
+      <span class="specs-key">CBOW</span>
+      <span class="specs-val">context &rarr; EmbeddingBag(mean) &rarr; ReLU &rarr; Linear &rarr; target logits</span>
+    </div>
+    <div class="specs-row">
+      <span class="specs-key">Skip-gram</span>
+      <span class="specs-val">target &rarr; Embedding &rarr; ReLU &rarr; Linear &rarr; context logits</span>
+    </div>
+    <div class="specs-row">
+      <span class="specs-key">Encoder</span>
+      <span class="specs-val">Embedding &rarr; LSTM(n_layers) &rarr; (hidden, cell)</span>
+    </div>
+    <div class="specs-row">
+      <span class="specs-key">Decoder</span>
+      <span class="specs-val">&lt;bos&gt; &rarr; Embedding &rarr; LSTM step &rarr; Linear &rarr; softmax over vocab &rarr; repeat</span>
+    </div>
+    <div class="specs-row">
+      <span class="specs-key">Evaluation</span>
+      <span class="specs-val">perplexity = exp(cross-entropy) · BLEU-4 with brevity penalty</span>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/vector-field.js') }}"></script>
+{% endblock %}
